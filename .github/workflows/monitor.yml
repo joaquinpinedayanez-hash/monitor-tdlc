@@ -54,6 +54,7 @@ jobs:
           git push
       # ── Relanzamiento automático cada 5 minutos ──────────────────────────
       - name: Relanzar en 5 minutos si sigue en horario
+        if: always()
         env:
           GH_TOKEN: ${{ secrets.PAT_WORKFLOW }}
           REPO: ${{ github.repository }}
