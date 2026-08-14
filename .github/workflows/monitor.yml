@@ -1,0 +1,81 @@
+name: Monitor TDLC
+on:
+  schedule:
+    # Disparo diario para arrancar la cadena. Ver nota abajo sobre su fiabilidad.
+    - cron: '0 13 * * 1-6'
+  workflow_dispatch:
+jobs:
+  revisar:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Descargar código
+        uses: actions/checkout@v5
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Instalar Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.11'
+
+      - name: Instalar dependencias
+        run: |
+          pip install -r requirements.txt
+          playwright install chromium
+          sudo apt-get install -y \
+            libasound2t64 libatk-bridge2.0-0 libatk1.0-0 libcups2 \
+            libdbus-1-3 libdrm2 libgbm1 libgtk-3-0 libnspr4 libnss3 \
+            libxcomposite1 libxdamage1 libxfixes3 libxkbcommon0 libxrandr2
+
+      - name: Ejecutar bot
+        env:
+          EMAIL_FROM: ${{ secrets.EMAIL_FROM }}
+          GMAIL_PASSWORD: ${{ secrets.GMAIL_PASSWORD }}
+          EMAIL_TO_DEFAULT: ${{ secrets.EMAIL_TO_DEFAULT }}
+          EMAIL_TO_CAUSAS: ${{ secrets.EMAIL_TO_CAUSAS }}
+        run: python monitor_causas.py
+
+      - name: Guardar estado en el repositorio
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add estado_escritos.json
+          if git diff --staged --quiet; then
+            echo "Sin cambios, nada que subir."
+          else
+            git commit -m "bot: actualiza estado escritos [skip ci]"
+            for i in 1 2 3 4 5; do
+              git pull --rebase origin main
+              if git push; then
+                echo "Push exitoso."
+                break
+              fi
+              echo "Push falló (intento $i), reintentando en 5s..."
+              sleep 5
+            done
+          fi
+
+      # ── Relanzamiento automático cada 5 minutos ──────────────────────────
+      - name: Relanzar en 5 minutos si sigue en horario
+        if: always()
+        env:
+          GH_TOKEN: ${{ secrets.PAT_WORKFLOW }}
+          REPO: ${{ github.repository }}
+        run: |
+          HORA_UTC=$(date -u +%H)
+          DIA_UTC=$(date -u +%u)
+          EN_HORARIO=false
+          if [ "$DIA_UTC" -ge 1 ] && [ "$DIA_UTC" -le 6 ]; then
+            if [ "$HORA_UTC" -ge 13 ] || [ "$HORA_UTC" -le 3 ]; then
+              EN_HORARIO=true
+            fi
+          fi
+          if [ "$EN_HORARIO" = "true" ]; then
+            echo "Dentro de horario — relanzando en 5 minutos..."
+            sleep 300
+            gh workflow run monitor.yml --repo "$REPO"
+          else
+            echo "Fuera de horario — no se relanza."
+          fi
