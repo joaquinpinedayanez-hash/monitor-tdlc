@@ -1,0 +1,30 @@
+name: Relanzador TDLC
+on:
+  workflow_dispatch:
+concurrency:
+  group: relanzador-tdlc-unica-instancia
+  cancel-in-progress: true
+jobs:
+  esperar_y_relanzar:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Esperar 5 minutos y relanzar revisión
+        env:
+          GH_TOKEN: ${{ secrets.PAT_WORKFLOW }}
+          REPO: ${{ github.repository }}
+        run: |
+          sleep 300
+          HORA_UTC=$(date -u +%H)
+          DIA_UTC=$(date -u +%u)
+          EN_HORARIO=false
+          if [ "$DIA_UTC" -ge 1 ] && [ "$DIA_UTC" -le 6 ]; then
+            if [ "$HORA_UTC" -ge 13 ] || [ "$HORA_UTC" -le 3 ]; then
+              EN_HORARIO=true
+            fi
+          fi
+          if [ "$EN_HORARIO" = "true" ]; then
+            echo "Dentro de horario — relanzando revisión."
+            gh workflow run monitor.yml --repo "$REPO"
+          else
+            echo "Fuera de horario — cadena terminada por hoy."
+          fi
