@@ -1,7 +1,7 @@
 {
   "42572": {
     "alias": "C-546-2026 — FNE vs Delivery Hero (Pedidos Ya)",
-    "ultimo_check": "2026-10-02 09:00:44",
+    "ultimo_check": "2026-10-02 15:11:35",
     "ids_vistos": [
       155396,
       155509,
@@ -18,7 +18,7 @@
   },
   "42536": {
     "alias": "C-540-2025 D Requerimiento de la Fiscalía Nacional Economica contra Elaboradora de Alimentos Porvenir S.A. y otras",
-    "ultimo_check": "2026-10-02 09:00:44",
+    "ultimo_check": "2026-10-02 15:11:36",
     "ids_vistos": [
       155395,
       155471,
@@ -59,7 +59,7 @@
   },
   "42509": {
     "alias": "C-531-2025 D Requerimiento de la FNE contra Guido Condori Manuel y otros",
-    "ultimo_check": "2026-10-02 09:00:44",
+    "ultimo_check": "2026-10-02 15:11:36",
     "ids_vistos": [
       155088,
       155114,
@@ -82,7 +82,7 @@
   },
   "42477": {
     "alias": "C-518-2024 D Requerimiento de la FNE contra Dreams S.A. y otros",
-    "ultimo_check": "2026-10-02 09:00:46",
+    "ultimo_check": "2026-10-02 15:11:39",
     "ids_vistos": [
       155128,
       155133,
@@ -151,12 +151,13 @@
       155857,
       155874,
       155957,
-      156304
+      156304,
+      156390
     ]
   },
   "42445": {
     "alias": "C-511-2024 D Requerimiento de la FNE contra Indura S.A. y otros",
-    "ultimo_check": "2026-10-02 09:00:46",
+    "ultimo_check": "2026-10-02 15:11:39",
     "ids_vistos": [
       155090,
       155099,
@@ -202,12 +203,13 @@
       156267,
       156293,
       156337,
-      156354
+      156354,
+      156387
     ]
   },
   "42290": {
     "alias": "C-430-2021 D Requerimiento de la Fiscalía Nacional Económica contra Brinks Chile S.A. y otras",
-    "ultimo_check": "2026-10-02 09:00:46",
+    "ultimo_check": "2026-10-02 15:11:39",
     "ids_vistos": [
       155417,
       155684,
@@ -220,7 +222,8 @@
       156105,
       156249,
       156356,
-      156364
+      156364,
+      156389
     ]
   }
 }
